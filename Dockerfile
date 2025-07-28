@@ -1,5 +1,5 @@
-# Base image với Python 3.11
-FROM python:3.11-slim
+# Base image với Python 3.10
+FROM python:3.10.18-slim-bullseye
 
 # Set working directory
 WORKDIR /app

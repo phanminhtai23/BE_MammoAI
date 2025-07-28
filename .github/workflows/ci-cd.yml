@@ -8,6 +8,28 @@ on:
 jobs:
     test:
         runs-on: ubuntu-latest
+        env:
+            MONGO_URI: ${{ secrets.MONGO_URI }}
+            DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+            SECRET_KEY: ${{ secrets.SECRET_KEY }}
+            ALGORITHM: ${{ secrets.ALGORITHM }}
+            ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+            REFRESH_TOKEN_EXPIRE_DAYS: ${{ secrets.REFRESH_TOKEN_EXPIRE_DAYS }}
+            GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+            MAILTRAP_PORT: ${{ secrets.MAILTRAP_PORT }}
+            SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+            MAILTRAP_LOGIN: ${{ secrets.MAILTRAP_LOGIN }}
+            MAILTRAP_PASSWORD: ${{ secrets.MAILTRAP_PASSWORD }}
+            SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+            VERIFICATION_CODE_EXPIRE_MINUTES: ${{ secrets.VERIFICATION_CODE_EXPIRE_MINUTES }}
+            GOOGLE_AUTH_URL: ${{ secrets.GOOGLE_AUTH_URL }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+            HOST: ${{ secrets.HOST }}
+            PORT: ${{ secrets.PORT }}
+            FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
 
         steps:
             - name: Checkout code
@@ -33,6 +55,8 @@ jobs:
 
             - name: Run unit tests
               run: |
+                  # Load test environment variables
+                  export $(cat .env.test | xargs)
                   pytest tests
 
             - name: Run linting
