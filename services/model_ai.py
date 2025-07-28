@@ -279,6 +279,9 @@ class ModelAI:
                 else:
                     model.load_state_dict(state_dict)
             
+            else:
+                raise ValueError(f"Model {current_model['name']} không hợp lệ")
+            
             # Move model to device và set eval mode
             model = model.to(self.device)
             model.eval()
