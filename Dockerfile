@@ -19,12 +19,7 @@ RUN mkdir -p /app/model_cache \
     && mkdir -p /app/logs \
     && mkdir -p /app/temp
 
-# Set environment variables
-ENV MODEL_CACHE_DIR=/app/model_cache
-ENV MODEL_CACHE_PERSISTENT=true
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
+
 
 # Expose port (sử dụng PORT từ config hoặc default 8000)
 EXPOSE 8000

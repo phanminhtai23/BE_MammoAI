@@ -1,18 +1,31 @@
 import pytest
-from fastapi.testclient import TestClient
-from main import app
-from utils.security import hash_password
-from utils.security import verify_password, hash_password
+from utils.security import hash_password, verify_password
 
 
-client = TestClient(app)
+def test_hash_password():
+    """Test hash password function"""
+    hashed = hash_password("Test1234")
+    assert hashed != "Test1234"  # Should be hashed
+    assert len(hashed) > 20  # Should be long enough
 
 
-def hash_password_test():
-    assert hash_password("Test1234") == "$2b$12$E0F7Q9S4nac74x1gMZcObOItf3Trra/yZmuRH.FZ//S/Bxi7d2HSW"
+def test_verify_password():
+    """Test verify password function"""
+    password = "123456"
+    hashed = hash_password(password)
+    
+    # Should verify correctly
+    assert verify_password(password, hashed) == True
+    
+    # Should fail with wrong password
+    assert verify_password("wrong_password", hashed) == False
 
 
-def verify_password_test():
-    assert verify_password("123456", hash_password("123456")) == True
+def test_basic_math():
+    """Basic test to ensure pytest is working"""
+    assert 2 + 2 == 4
+
+
+
 
 

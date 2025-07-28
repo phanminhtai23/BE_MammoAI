@@ -57,7 +57,7 @@ jobs:
               run: |
                   # Load test environment variables
                   export $(cat .env.test | xargs)
-                  pytest tests -W ignore::DeprecationWarning
+                  pytest tests
 
             - name: Run linting
               run: |
