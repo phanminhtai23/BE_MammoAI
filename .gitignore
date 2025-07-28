@@ -14,3 +14,5 @@
 *.pt
 
 /venv
+
+.pytest_cache

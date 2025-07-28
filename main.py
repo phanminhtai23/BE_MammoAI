@@ -1,4 +1,3 @@
-from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI
 from routes.route_user import router as users_router
 from routes.route_admin import router as admin_router
