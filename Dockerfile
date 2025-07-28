@@ -4,24 +4,6 @@ FROM python:3.10.18-slim-bullseye
 # Set working directory
 WORKDIR /app
 
-# Cài đặt system dependencies cần thiết cho AI/ML
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    wget \
-    curl \
-    git \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    libgomp1 \
-    libgcc-s1 \
-    libstdc++6 \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
 # Copy requirements trước để tận dụng Docker cache
 COPY requirements.txt .
 
@@ -47,9 +29,5 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Expose port (sử dụng PORT từ config hoặc default 8000)
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=60s --timeout=60s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
 # Start command
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-u", "main.py"]
