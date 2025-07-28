@@ -14,34 +14,6 @@ from config import FRONTEND_URL
 from services.model_ai import initialize_model_service
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://127.0.0.1",
-    "https://localhost",
-    "https://127.0.0.1",
-    "http://127.0.0.1:3001",
-    "http://127.0.0.1:3002",
-    "http://127.0.0.1:3003",
-    "http://127.0.0.1:3004",
-    "http://127.0.0.1:3005",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "http://localhost:3003",
-    "http://localhost:3004",
-    "http://localhost:3005",
-    "http://localhost:3006",
-    "https://127.0.0.1:3001",
-    "https://127.0.0.1:3002",
-    "https://127.0.0.1:3003",
-    "https://127.0.0.1:3004",
-    "https://127.0.0.1:3005",
-    "https://localhost:3001",
-    "https://localhost:3002",
-    "https://localhost:3003",
-    "https://localhost:3004",
-    "https://localhost:3005",
-    "https://localhost:3006",
     FRONTEND_URL,
     "*",
 ]
@@ -61,8 +33,6 @@ app.include_router(email_router, prefix="/email", tags=["Email"])
 app.include_router(admin_router, prefix="/admin", tags=["Admin"])
 app.include_router(model_router, prefix="/model", tags=["Model"])
 app.include_router(prediction_router, prefix="/prediction", tags=["Prediction"])
-# app.include_router(drugs_router, prefix="/drugs", tags=["Drugs"])
-# app.include_router(ddi_router, prefix="/ddi", tags=["DDI"])
 
 @app.on_event("startup")
 async def startup_event():
@@ -82,15 +52,8 @@ async def startup_event():
         print(f"❌ Error initializing model service: {e}")
         print("⚠️ Model will be loaded when needed")
 
-# @app.get("/docs", include_in_schema=False)
-# async def custom_swagger_ui():
-#     return get_swagger_ui_html(
-#         openapi_url="/openapi.json",
-#         title="Custom Swagger UI",
-#         swagger_ui_version="0.1.0",  # Thay đổi version tại đây
-#     )
-
 
 if __name__ == "__main__":
     print(f"Server is running at: http://{HOST}:{PORT} !!!!")
     uvicorn.run("main:app", host=HOST, port=int(PORT), reload=True)
+    
