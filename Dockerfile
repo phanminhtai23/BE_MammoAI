@@ -1,39 +1,55 @@
-FROM python:3.9-slim
+# Base image với Python 3.11
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
+# Cài đặt system dependencies cần thiết cho AI/ML
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     wget \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    git \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libgcc-s1 \
+    libstdc++6 \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Copy requirements first for better caching
+# Copy requirements trước để tận dụng Docker cache
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Cài đặt Python dependencies
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy toàn bộ application code
 COPY . .
 
-# Create model cache directory
-RUN mkdir -p /app/model_cache
+# Tạo các thư mục cần thiết
+RUN mkdir -p /app/model_cache \
+    && mkdir -p /app/logs \
+    && mkdir -p /app/temp
 
-# Environment variables for ModelAI
+# Set environment variables
 ENV MODEL_CACHE_DIR=/app/model_cache
 ENV MODEL_CACHE_PERSISTENT=true
 ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
-# Expose port
+# Expose port (sử dụng PORT từ config hoặc default 8000)
 EXPOSE 8000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=60s --timeout=60s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # Start command
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"] 
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
