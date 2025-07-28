@@ -8,6 +8,7 @@ import uuid
 
 client = TestClient(app)
 
+
 def test():
-    b = 2+2
+    b = 2 + 2
     assert b == 4

@@ -14,6 +14,7 @@ class UserSchema(BaseModel):
     role: str = "user"
     created_at: datetime
 
+
 class UserRegister(BaseModel):
     name: str  # Họ tên
     email: EmailStr
@@ -41,6 +42,7 @@ class UserResponse(BaseModel):
 
 class UserInDB(BaseModel):
     """Schema cho user trong database"""
+
     id: str
     email: EmailStr
     password_hash: str  # Password đã được hash
@@ -62,6 +64,7 @@ class UserUpdate(BaseModel):
 
 class UserPublic(BaseModel):
     """Schema cho response công khai (không có password)"""
+
     id: str
     email: EmailStr
     name: str
@@ -73,6 +76,7 @@ class UserPublic(BaseModel):
 class SendVerificationCode(BaseModel):
     email: EmailStr
 
+
 class VerifyCode(BaseModel):
     email: EmailStr
     code: str
@@ -80,6 +84,7 @@ class VerifyCode(BaseModel):
 
 class VerifyResetToken(BaseModel):
     token: str
+
 
 class ResetPassword(BaseModel):
     token: str

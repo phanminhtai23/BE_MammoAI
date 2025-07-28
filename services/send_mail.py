@@ -3,7 +3,13 @@ from fastapi import FastAPI
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from config import MAILTRAP_PORT, SMTP_SERVER, MAILTRAP_LOGIN, MAILTRAP_PASSWORD, SENDER_EMAIL
+from config import (
+    MAILTRAP_PORT,
+    SMTP_SERVER,
+    MAILTRAP_LOGIN,
+    MAILTRAP_PASSWORD,
+    SENDER_EMAIL,
+)
 import random
 import string
 from database import verification_codes_collection
@@ -12,23 +18,24 @@ from pathlib import Path
 
 router = APIRouter()
 
+
 class SMTPConnection:
     _instance = None
     _server = None
-    
+
     @classmethod
     def get_instance(cls):
         if cls._instance is None:
             cls._instance = SMTPConnection()
         return cls._instance
-    
+
     def __init__(self):
         self.port = MAILTRAP_PORT
         self.smtp_server = SMTP_SERVER
         self.login = MAILTRAP_LOGIN
         self.password = MAILTRAP_PASSWORD
         self.connect()
-    
+
     def connect(self):
         try:
             self._server = smtplib.SMTP(self.smtp_server, self.port)
@@ -38,12 +45,12 @@ class SMTPConnection:
         except Exception as e:
             print(f"❌ Lỗi kết nối SMTP: {str(e)}")
             self._server = None
-    
+
     def send_mail(self, sender_email, receiver_emails, message):
         try:
             if self._server is None:
                 self.connect()
-            
+
             self._server.sendmail(sender_email, receiver_emails, message.as_string())
             return True
         except Exception as e:
@@ -51,11 +58,14 @@ class SMTPConnection:
             # Thử kết nối lại nếu có lỗi
             try:
                 self.connect()
-                self._server.sendmail(sender_email, receiver_emails, message.as_string())
+                self._server.sendmail(
+                    sender_email, receiver_emails, message.as_string()
+                )
                 return True
             except Exception as e2:
                 print(f"❌ Lỗi gửi mail lần 2: {str(e2)}")
                 return False
+
 
 class SendMail:
     def __init__(self):
@@ -350,16 +360,18 @@ class SendMail:
 
         # Sử dụng kết nối SMTP đã được tạo trước đó
         if self.smtp_connection.send_mail(self.sender_email, receiver_emails, message):
-            return {"msg":"send mail success"}
+            return {"msg": "send mail success"}
         else:
-            return {"msg":"send mail failed"}
+            return {"msg": "send mail failed"}
 
     # Tạo mã xác thực 6 số
     def generate_verification_code(self):
         """Tạo mã xác thực 6 số"""
-        return ''.join(random.choices(string.digits, k=6))
+        return "".join(random.choices(string.digits, k=6))
 
-    def send_forgot_password_email(self, receiver_emails, token, expires_at, reset_password_url):
+    def send_forgot_password_email(
+        self, receiver_emails, token, expires_at, reset_password_url
+    ):
         # Configuration
         receiver_emails = receiver_emails
 
@@ -628,20 +640,27 @@ class SendMail:
 
         # Sử dụng kết nối SMTP đã được tạo trước đó
         if self.smtp_connection.send_mail(self.sender_email, receiver_emails, message):
-            return {"msg":"send mail success"}
+            return {"msg": "send mail success"}
         else:
-            return {"msg":"send mail failed"}
+            return {"msg": "send mail failed"}
 
 
 # Khởi tạo đối tượng SendMail để sử dụng trong toàn bộ ứng dụng
 mail_service = SendMail()
 
+
 # Export các hàm cần thiết để sử dụng trong các module khác
 def send_verification_email(receiver_emails, verification_code, expires_at):
-    return mail_service.send_verification_email(receiver_emails, verification_code, expires_at)
+    return mail_service.send_verification_email(
+        receiver_emails, verification_code, expires_at
+    )
+
 
 def generate_verification_code():
     return mail_service.generate_verification_code()
 
+
 def send_forgot_password_email(receiver_emails, token, expires_at, reset_password_url):
-    return mail_service.send_forgot_password_email(receiver_emails, token, expires_at, reset_password_url)
+    return mail_service.send_forgot_password_email(
+        receiver_emails, token, expires_at, reset_password_url
+    )

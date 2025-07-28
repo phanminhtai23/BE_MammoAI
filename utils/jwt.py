@@ -1,12 +1,20 @@
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
-from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS
+from config import (
+    SECRET_KEY,
+    ALGORITHM,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    REFRESH_TOKEN_EXPIRE_DAYS,
+)
+
 # from database import tokens_collection
 from bson import ObjectId
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer
 
 security = HTTPBearer()
+
+
 # Tạo JWT
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -15,6 +23,7 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expires_at})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt, created_at, expires_at
+
 
 # Xác minh JWT
 async def verify_access_token(token: str):
@@ -25,11 +34,11 @@ async def verify_access_token(token: str):
         # Kiểm tra hạn token
         if payload["exp"] < datetime.now(timezone.utc).timestamp():
             return None
-        
+
         return payload  # Token hợp lệ, trả về payload chứa thông tin user
     except JWTError:
         return None  # Token không hợp lệ
-    
+
 
 # Dependency để verify token và check admin role
 async def verify_admin_token(token: str = Depends(security)):
@@ -38,17 +47,22 @@ async def verify_admin_token(token: str = Depends(security)):
         # Decode JWT token
         payload = await verify_access_token(token.credentials)
         if not payload:
-            raise HTTPException(status_code=401, detail="Token không hợp lệ hoặc đã hết hạn")
-        
+            raise HTTPException(
+                status_code=401, detail="Token không hợp lệ hoặc đã hết hạn"
+            )
+
         # Check admin role
         user_role = payload.get("role")
         if user_role != "admin":
-            raise HTTPException(status_code=403, detail="Chỉ admin mới có quyền quản lý model")
-        
+            raise HTTPException(
+                status_code=403, detail="Chỉ admin mới có quyền quản lý model"
+            )
+
         return payload
-        
+
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Lỗi xác thực: {str(e)}")
+
 
 async def verify_token(token: str = Depends(security)):
     """Verify JWT token và check admin role"""
@@ -57,13 +71,14 @@ async def verify_token(token: str = Depends(security)):
         # Decode JWT token
         payload = await verify_access_token(token.credentials)
         if not payload:
-            raise HTTPException(status_code=401, detail="Token không hợp lệ hoặc đã hết hạn")
-        
+            raise HTTPException(
+                status_code=401, detail="Token không hợp lệ hoặc đã hết hạn"
+            )
+
         return payload
-        
+
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Lỗi xác thực: {str(e)}")
-
 
 
 # def create_refresh_token(user_id: str, device_info: str):

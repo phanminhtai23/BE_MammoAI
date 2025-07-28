@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
 
+
 class VerificationCode(BaseModel):
     email: EmailStr
     code: str
@@ -10,9 +11,11 @@ class VerificationCode(BaseModel):
     is_used: bool = False
     purpose: str = "email_verification"  # email_verification, password_reset, etc.
 
+
 class VerifyCodeRequest(BaseModel):
     email: EmailStr
     code: str
+
 
 class VerifyCodeResponse(BaseModel):
     success: bool

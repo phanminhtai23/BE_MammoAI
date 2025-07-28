@@ -7,6 +7,7 @@ from enum import IntEnum
 
 class ModelInfor(BaseModel):
     """Schema chính để lưu thông tin model"""
+
     id: str  # UUID
     name: str  # Tên model
     version: Optional[str] = None  # Version model
@@ -22,6 +23,7 @@ class ModelInfor(BaseModel):
 
 class ModelCreate(BaseModel):
     """Schema để tạo model mới"""
+
     name: str
     version: Optional[str] = None
     accuracy: Optional[float] = None  # Độ chính xác của model
@@ -34,8 +36,7 @@ class ModelCreate(BaseModel):
 
 class ModelUpdate(BaseModel):
     """Schema để cập nhật model"""
+
     name: Optional[str] = None
     version: Optional[str] = None
     accuracy: Optional[float] = None  # Độ chính xác của model
-
-
