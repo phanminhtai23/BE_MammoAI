@@ -3,8 +3,6 @@ from database import users_collection, users_session_collection
 from schemas.user import (
     UserRegister,
     LoginRequest,
-    UserUpdate,
-    UserResponse,
     SendVerificationCode,
     VerifyCode,
     VerifyResetToken,
@@ -14,7 +12,6 @@ from utils.security import (
     hash_password,
     verify_password,
     get_current_user,
-    check_admin_role,
 )
 from utils.jwt import create_access_token, verify_access_token
 from fastapi.encoders import jsonable_encoder

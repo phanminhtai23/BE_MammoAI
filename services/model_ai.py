@@ -1,16 +1,13 @@
-import os
 import torch
 import torch.nn as nn
 from torchvision import transforms
 from PIL import Image
 import requests
-import numpy as np
 from typing import List, Tuple, Optional, Dict, Any
 from pathlib import Path
 import asyncio
 import aiohttp
 import gc  # Garbage collection để giải phóng RAM
-from collections import OrderedDict
 from database import models_collection
 
 

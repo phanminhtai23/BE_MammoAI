@@ -1,12 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.security import HTTPBearer
 from typing import Optional, List
 import uuid
 from datetime import datetime, timezone, timedelta
 
 from services.s3_client import s3_client
 from database import models_collection, predictions_collection
-from utils.jwt import verify_access_token, verify_admin_token, verify_token
+from utils.jwt import verify_admin_token, verify_token
 from schemas.model import ModelInfor, ModelCreate, ModelUpdate
 from services.model_ai import model_ai
 

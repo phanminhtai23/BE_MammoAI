@@ -4,11 +4,9 @@ from config import (
     SECRET_KEY,
     ALGORITHM,
     ACCESS_TOKEN_EXPIRE_MINUTES,
-    REFRESH_TOKEN_EXPIRE_DAYS,
 )
 
 # from database import tokens_collection
-from bson import ObjectId
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer
 

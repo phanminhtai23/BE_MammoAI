@@ -4,7 +4,6 @@ from typing import Dict, List, Optional
 import asyncio
 
 from database import predictions_collection
-from schemas.prediction import PredictionCreate, PredictionRecord
 from services.model_ai import model_ai
 
 

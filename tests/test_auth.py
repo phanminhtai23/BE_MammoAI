@@ -1,14 +1,18 @@
 import pytest
 from fastapi.testclient import TestClient
 from main import app
-from database import users_collection, users_session_collection
 from utils.security import hash_password
-from datetime import datetime, timezone, timedelta
-import uuid
+from utils.security import verify_password, hash_password
+
 
 client = TestClient(app)
 
 
-def test():
-    b = 2 + 2
-    assert b == 4
+def hash_password_test():
+    assert hash_password("Test1234") == "$2b$12$E0F7Q9S4nac74x1gMZcObOItf3Trra/yZmuRH.FZ//S/Bxi7d2HSW"
+
+
+def verify_password_test():
+    assert verify_password("123456", hash_password("123456")) == True
+
+

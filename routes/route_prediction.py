@@ -7,7 +7,6 @@ from utils.jwt import verify_token, verify_admin_token
 from database import predictions_collection
 from services.s3_client import s3_client
 from collections import Counter
-import calendar
 
 router = APIRouter()
 

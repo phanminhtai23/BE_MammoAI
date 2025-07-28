@@ -1,9 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from database import users_collection, users_session_collection
-from schemas.user import UserResponse, UserUpdate
+from schemas.user import UserUpdate
 from utils.security import get_current_user, check_admin_role
-from fastapi.encoders import jsonable_encoder
-from typing import Optional, List
+from typing import Optional
 from datetime import datetime, timedelta, timezone
 import math
 from fastapi.responses import StreamingResponse

@@ -1,11 +1,9 @@
 from fastapi.security import OAuth2PasswordBearer
 
 # from utils.jwt import verify_access_token
-from fastapi import Depends, HTTPException
 from passlib.context import CryptContext
-from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
-from fastapi.openapi.models import OAuthFlowPassword
 from utils.jwt import verify_access_token
+from fastapi import Depends
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -35,3 +33,7 @@ def check_admin_role(user: dict):
         return True
     else:
         return False
+
+if __name__ == "__main__":
+    print(hash_password("123456"))
+    print(verify_password("123456", hash_password("123456")))
