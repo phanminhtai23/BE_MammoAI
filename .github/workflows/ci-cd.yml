@@ -33,7 +33,7 @@ jobs:
 
             - name: Run unit tests
               run: |
-                  pytest tests/ -v
+                  pytest tests
 
             - name: Run linting
               run: |
