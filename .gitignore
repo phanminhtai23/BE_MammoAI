@@ -1,0 +1,14 @@
+**/.env
+**/node_modules
+**/__pycache__
+/backend/venv
+
+**/*.config.js
+
+**/*.pem
+
+**/*.pdf
+
+**/*.pt
+
+*.pt
