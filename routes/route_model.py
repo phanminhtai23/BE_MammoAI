@@ -234,7 +234,7 @@ async def create_model(
 
 
 # lấy danh sách model
-@router.get("/", response_model=List[ModelInfor])
+@router.get("/get-all-models", response_model=List[ModelInfor])
 async def get_models(
     page: int = 1,
     limit: int = 10,
