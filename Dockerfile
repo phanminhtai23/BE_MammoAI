@@ -4,7 +4,7 @@ FROM python:3.10.18-slim-bullseye
 # Set working directory
 WORKDIR /app
 
-# Copy requirements trước để tận dụng Docker cache
+# Copy requirements
 COPY requirements.txt .
 
 # Cài đặt Python dependencies
