@@ -9,6 +9,7 @@ jobs:
     test:
         runs-on: ubuntu-latest
         env:
+            DEVELOPMENT: ${{ secrets.DEVELOPMENT }}
             MONGO_URI: ${{ secrets.MONGO_URI }}
             DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
             SECRET_KEY: ${{ secrets.SECRET_KEY }}

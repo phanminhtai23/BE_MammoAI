@@ -14,8 +14,6 @@ RUN pip install --upgrade pip \
 # Copy toàn bộ application code
 COPY . .
 
-# Copy luôn chứng chỉ vào image
-COPY certs/global-bundle.pem /app/certs/global-bundle.pem
 
 # Start command
 CMD ["python", "-u", "main.py"]
