@@ -90,6 +90,7 @@ jobs:
                   context: .
                   push: true
                   tags: minhtai03/mammoai-backend:cpu-only
+                  no-cache: true
 
     deploy:
         runs-on: ubuntu-latest
