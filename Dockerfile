@@ -14,6 +14,5 @@ RUN pip install --upgrade pip \
 # Copy toàn bộ application code
 COPY . .
 
-
 # Start command
 CMD ["python", "-u", "main.py"]

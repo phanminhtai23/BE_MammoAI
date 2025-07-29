@@ -3,8 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
-DEVELOPMENT = os.getenv("DEVELOPMENT")
+MONGO_URI_LOCAL = os.getenv("MONGO_URI_LOCAL")
+MONGO_URI_PROD = os.getenv("MONGO_URI_PROD")
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 SECRET_KEY = os.getenv("SECRET_KEY")
 HOST = os.getenv("HOST")
