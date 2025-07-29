@@ -59,4 +59,4 @@ app.include_router(prediction_router, prefix="/prediction", tags=["Prediction"])
 
 if __name__ == "__main__":
     print(f"Server is running at: http://{HOST}:{PORT} !!!!")
-    uvicorn.run("main:app", host=HOST, port=int(PORT), reload=True)
+    uvicorn.run("main:app", host=HOST, port=int(PORT), reload=True, proxy_headers=True, forwarded_allow_ips="*")
