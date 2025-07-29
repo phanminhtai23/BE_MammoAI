@@ -146,7 +146,7 @@ async def model_is_availabe(user=Depends(verify_token)):
     """
     Kiểm tra model có sẵn trong database không
     """
-    print("ahiaiah", model_ai.current_model is not None)
+    # print("ahiaiah", model_ai.current_model is not None)
     try:
         result = await model_ai.initialize_model()
         return {"available": result}

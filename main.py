@@ -13,6 +13,7 @@ from config import HOST, PORT
 from fastapi.middleware.cors import CORSMiddleware
 from config import FRONTEND_URL
 from services.model_ai import initialize_model_service
+from starlette.middleware.proxy_headers import ProxyHeadersMiddleware
 
 origins = [
     FRONTEND_URL,
@@ -41,6 +42,11 @@ async def lifespan(app: FastAPI):
     print("🛑 Shutting down application...")
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    ProxyHeadersMiddleware,
+    trusted_hosts="*",
+)
 
 app.add_middleware(
     CORSMiddleware,
