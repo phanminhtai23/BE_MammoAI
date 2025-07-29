@@ -108,3 +108,4 @@ jobs:
                       sudo docker stop mammoai-backend_container || true
                       sudo docker rm mammoai-backend_container || true
                       sudo docker run --env-file .env -d -p 8015:8015 --name mammoai-backend_container --restart unless-stopped minhtai03/mammoai-backend:cpu-only
+                      sudo docker system prune -f
