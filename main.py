@@ -4,6 +4,7 @@ from routes.route_admin import router as admin_router
 from routes.route_email import router as email_router
 from routes.route_model import router as model_router
 from routes.route_prediction import router as prediction_router
+from contextlib import asynccontextmanager
 
 # from routes.drugs import router as drugs_router
 # from routes.ddi import router as ddi_router
@@ -18,7 +19,28 @@ origins = [
     "*",
 ]
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    print("🚀 Starting up application...")
+    
+    # Initialize model service
+    try:
+        success = await initialize_model_service()
+        if success:
+            print("✅ Model service initialized successfully")
+        else:
+            print("⚠️ Model service initialization failed, will retry when needed")
+    except Exception as e:
+        print(f"❌ Error initializing model service: {e}")
+        print("⚠️ Model will be loaded when needed")
+    
+    yield
+    
+    # Shutdown
+    print("🛑 Shutting down application...")
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,26 +55,6 @@ app.include_router(email_router, prefix="/email", tags=["Email"])
 app.include_router(admin_router, prefix="/admin", tags=["Admin"])
 app.include_router(model_router, prefix="/model", tags=["Model"])
 app.include_router(prediction_router, prefix="/prediction", tags=["Prediction"])
-
-
-@app.on_event("startup")
-async def startup_event():
-    """
-    Initialize services khi app khởi động
-    """
-    print("🚀 Starting up application...")
-
-    # Initialize model service
-    try:
-        success = await initialize_model_service()
-        if success:
-            print("✅ Model service initialized successfully")
-        else:
-            print("⚠️ Model service initialization failed, will retry when needed")
-    except Exception as e:
-        print(f"❌ Error initializing model service: {e}")
-        print("⚠️ Model will be loaded when needed")
-
 
 if __name__ == "__main__":
     print(f"Server is running at: http://{HOST}:{PORT} !!!!")
