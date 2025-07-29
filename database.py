@@ -4,17 +4,21 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
+DEVELOPMENT = os.getenv("DEVELOPMENT")
+MONGO_URI = ""
+if DEVELOPMENT == "true":
+    MONGO_URI = os.getenv("MONGO_URI")
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    PEM_PATH = os.path.join(BASE_DIR, "certs", "global-bundle.pem")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PEM_PATH = os.path.join(BASE_DIR, "certs", "global-bundle.pem")
-
-MONGO_URI = (
-    f"mongodb://{os.getenv('MONGO_USERNAME')}:{os.getenv('MONGO_PASSWORD')}@"
-    f"{os.getenv('MONGO_HOST')}:27017/"
-    "?ssl=true"
-    f"&tlsCAFile={PEM_PATH}"
-    "&retryWrites=false"
-)
+    MONGO_URI = (
+        f"mongodb://{os.getenv('MONGO_USERNAME')}:{os.getenv('MONGO_PASSWORD')}@"
+        f"{os.getenv('MONGO_HOST')}:27017/"
+        "?ssl=true"
+        f"&tlsCAFile={PEM_PATH}"
+        "&retryWrites=false"
+    )
 # print("MONGO_URI:", MONGO_URI)
 
 client = AsyncIOMotorClient(MONGO_URI)
