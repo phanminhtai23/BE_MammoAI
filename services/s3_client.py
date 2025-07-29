@@ -202,110 +202,36 @@ class S3Client:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    # def upload_image(self, file_path: str, file_name: str = None) -> Dict:
-    #     """
-    #     Upload image to S3 mammo-images folder with unique filename
+    def download_image(self, file_key: str, local_path: str) -> Dict:
+        """
+        Download image from S3 to local path
 
-    #     Args:
-    #         file_path: Local path to the file
-    #         file_name: Original filename (optional, will use basename if not provided)
+        Args:
+            file_key: S3 key of the image to download
+            local_path: Local path where to save the file
 
-    #     Returns:
-    #         Dict containing upload result
-    #     """
-    #     try:
-    #         # Generate unique filename if not provided
-    #         if file_name is None:
-    #             file_name = os.path.basename(file_path)
+        Returns:
+            Dict containing download result
+        """
+        try:
+            # Ensure the key is in the images folder
+            if not file_key.startswith(f"{self.images_folder}/"):
+                file_key = f"{self.images_folder}/{file_key}"
 
-    #         unique_filename = self._generate_unique_filename(file_name)
-    #         s3_key = f"{self.images_folder}/{unique_filename}"
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
-    #         self.s3_client.upload_file(
-    #             file_path,
-    #             self.bucket_name,
-    #             s3_key,
-    #             ExtraArgs={
-    #                 'ACL': 'public-read',
-    #                 'ContentType': self._get_content_type(unique_filename),
-    #                 'Metadata': {
-    #                     'original-filename': file_name,
-    #                     'upload-time': datetime.now().isoformat(),
-    #                     'file-size': str(os.path.getsize(file_path))
-    #                 }
-    #             }
-    #         )
+            # Download the file
+            self.s3_client.download_file(
+                self.bucket_name,
+                file_key,
+                local_path
+            )
 
-    #         url = f"https://{self.bucket_name}.s3.amazonaws.com/{s3_key}"
+            return {"success": True, "downloaded_key": file_key, "local_path": local_path}
 
-    #         logger.info(f"✅ Image uploaded successfully: {url}")
-    #         return {
-    #             'success': True,
-    #             'url': url,
-    #             'key': s3_key,
-    #             'filename': unique_filename,
-    #             'original_filename': file_name
-    #         }
-
-    #     except Exception as e:
-    #         logger.error(f"❌ Error uploading image: {str(e)}")
-    #         return {
-    #             'success': False,
-    #             'error': str(e)
-    #         }
-
-    # def upload_model(self, file_path: str, file_name: str = None) -> Dict:
-    #     """
-    #     Upload model to S3 mammo-models folder with unique filename
-
-    #     Args:
-    #         file_path: Local path to the file
-    #         file_name: Original filename (optional, will use basename if not provided)
-
-    #     Returns:
-    #         Dict containing upload result
-    #     """
-    #     try:
-    #         # Generate unique filename if not provided
-    #         if file_name is None:
-    #             file_name = os.path.basename(file_path)
-
-    #         unique_filename = self._generate_unique_filename(file_name)
-    #         s3_key = f"{self.models_folder}/{unique_filename}"
-
-    #         self.s3_client.upload_file(
-    #             file_path,
-    #             self.bucket_name,
-    #             s3_key,
-    #             ExtraArgs={
-    #                 'ACL': 'public-read',
-    #                 'ContentType': self._get_content_type(unique_filename),
-    #                 'Metadata': {
-    #                     'original-filename': file_name,
-    #                     'upload-time': datetime.now().isoformat(),
-    #                     'file-size': str(os.path.getsize(file_path))
-    #                 }
-    #             }
-    #         )
-
-    #         url = f"https://{self.bucket_name}.s3.amazonaws.com/{s3_key}"
-
-    #         logger.info(f"✅ Model uploaded successfully: {url}")
-    #         return {
-    #             'success': True,
-    #             'url': url,
-    #             'key': s3_key,
-    #             'filename': unique_filename,
-    #             'original_filename': file_name
-    #         }
-
-    #     except Exception as e:
-    #         logger.error(f"❌ Error uploading model: {str(e)}")
-    #         return {
-    #             'success': False,
-    #             'error': str(e)
-    #         }
-
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
 # Create a singleton instance
 s3_client = S3Client()

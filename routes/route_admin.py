@@ -659,6 +659,7 @@ async def create_dataset_download(
 
         cursor = predictions_collection.find({})
         predictions = await cursor.to_list(length=None)
+        print(f"📊 Tổng số predictions trong database: {len(predictions)}")
         if not predictions:
             raise HTTPException(
                 status_code=404, detail="Không có dữ liệu predictions để tạo dataset"
@@ -709,17 +710,33 @@ async def create_dataset_download(
         with tempfile.TemporaryDirectory() as temp_dir:
             images_dir = os.path.join(temp_dir, "images")
             os.makedirs(images_dir, exist_ok=True)
+            print(f"Tạo thư mục images: {images_dir}")
             all_image_keys = set()
             for pred in predictions:
                 all_image_keys.add(pred["image_key"])
+            print(f"Tổng số image keys unique: {len(all_image_keys)}")
+            if len(all_image_keys) > 0:
+                print(f"Ví dụ image keys: {list(all_image_keys)[:3]}")
+            downloaded_count = 0
             for image_key in all_image_keys:
                 try:
                     pred = next(p for p in predictions if p["image_key"] == image_key)
                     original_name = pred["image_original_name"]
                     local_path = os.path.join(images_dir, original_name)
-                    s3_client.download_image(image_key, local_path)
+                    result = s3_client.download_image(image_key, local_path)
+                    if result["success"]:
+                        downloaded_count += 1
                 except Exception as e:
+                    print(f"Lỗi khi download ảnh {image_key}: {str(e)}")
                     continue
+            print(f"Đã download {downloaded_count} ảnh vào thư mục {images_dir}")
+            
+            # Kiểm tra file trong thư mục images
+            image_files = os.listdir(images_dir)
+            print(f"Số file trong thư mục images: {len(image_files)}")
+            if len(image_files) > 0:
+                print(f"Ví dụ file: {image_files[:3]}")
+            
             train_df = pd.DataFrame(train_data)
             val_df = pd.DataFrame(val_data)
             test_df = pd.DataFrame(test_data)
@@ -731,11 +748,16 @@ async def create_dataset_download(
             test_df.to_csv(test_csv_path, index=False, header=False)
             zip_path = os.path.join(temp_dir, "data.zip")
             with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+                # Thêm tất cả file ảnh vào thư mục images trong zip
+                image_count = 0
                 for root, dirs, files in os.walk(images_dir):
                     for file in files:
                         file_path = os.path.join(root, file)
-                        arcname = os.path.relpath(file_path, temp_dir)
+                        # Đảm bảo file được thêm vào thư mục images trong zip
+                        arcname = os.path.join("images", file)
                         zipf.write(file_path, arcname)
+                        image_count += 1
+                print(f"Đã thêm {image_count} file ảnh vào zip")
                 zipf.write(train_csv_path, "train.csv")
                 zipf.write(val_csv_path, "val.csv")
                 zipf.write(test_csv_path, "test.csv")
