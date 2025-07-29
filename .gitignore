@@ -5,7 +5,7 @@
 
 **/*.config.js
 
-**/*.pem
+# **/*.pem
 
 **/*.pdf
 
