@@ -7,7 +7,7 @@ if DEVELOPMENT_MODE == "true":
 else:
     MONGO_URI = MONGO_URI_PROD
 
-print("MONGO_URI:", MONGO_URI)
+# print("MONGO_URI:", MONGO_URI)
 
 client = AsyncIOMotorClient(MONGO_URI)
 db = client[DATABASE_NAME]
