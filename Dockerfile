@@ -14,7 +14,7 @@ RUN pip install --upgrade pip \
 # Copy toàn bộ application code
 COPY . .
 
-COPY global-bundle.pem /app/global-bundle.pem
+COPY ./global-bundle.pem /app/global-bundle.pem
 
 # Start command
 CMD ["python", "-u", "main.py"]
