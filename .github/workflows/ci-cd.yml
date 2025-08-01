@@ -62,7 +62,7 @@ jobs:
 
             - name: Run linting
               run: |
-                  pip install flake8 black isort
+                  pip install flake8 black isort pytest pytest-asyncio
                   flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
                   black . --verbose
                   isort . --verbose

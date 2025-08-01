@@ -5,6 +5,7 @@
 
 **/*.config.js
 
+/tests
 
 **/*.pdf
 

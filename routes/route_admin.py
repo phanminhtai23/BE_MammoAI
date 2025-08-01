@@ -333,7 +333,7 @@ async def get_traffic_overview(current_user: dict = Depends(get_current_user)):
         )
 
     try:
-        print("🔍 Bắt đầu lấy traffic overview...")
+        # print("🔍 Bắt đầu lấy traffic overview...")
 
         # Thống kê cơ bản
         total_users = await users_collection.count_documents({})
@@ -344,14 +344,14 @@ async def get_traffic_overview(current_user: dict = Depends(get_current_user)):
         online_users = await users_session_collection.count_documents(
             {"is_active": True, "expires_at": {"$gt": now}}
         )
-        print(f"📊 Total users: {total_users}, Online users (còn hạn): {online_users}")
+        # print(f"📊 Total users: {total_users}, Online users (còn hạn): {online_users}")
 
         # User mới tháng này với múi giờ Việt Nam
         vietnam_tz = timezone(timedelta(hours=7))
         now = datetime.now(vietnam_tz)
         start_of_month = datetime(now.year, now.month, 1)
 
-        print(f"🗓️ Tìm user mới từ {start_of_month} (tháng {now.month}/{now.year})")
+        # print(f"🗓️ Tìm user mới từ {start_of_month} (tháng {now.month}/{now.year})")
 
         # Pipeline flexible cho new users tháng này
         pipeline_new_users = [
@@ -384,8 +384,8 @@ async def get_traffic_overview(current_user: dict = Depends(get_current_user)):
         else:
             average_sessions = 0.0
 
-        print(f"📈 New users tháng này: {new_users_this_month}")
-        print(f"📊 Total sessions: {total_sessions}, Average: {average_sessions}")
+        # print(f"📈 New users tháng này: {new_users_this_month}")
+        # print(f"📊 Total sessions: {total_sessions}, Average: {average_sessions}")
 
         result_data = {
             "totalUsers": total_users,
@@ -394,7 +394,7 @@ async def get_traffic_overview(current_user: dict = Depends(get_current_user)):
             "averageSessions": average_sessions,
         }
 
-        print(f"✅ Trả về data: {result_data}")
+        # print(f"✅ Trả về data: {result_data}")
 
         return {
             "status_code": 200,
@@ -417,7 +417,7 @@ async def get_new_users_by_month(
     """
     Lấy thống kê user mới theo tháng (Admin only)
     """
-    print("months: ", months)
+    # print("months: ", months)
     # Kiểm tra quyền admin
     if not check_admin_role(current_user):
         raise HTTPException(status_code=403, detail="Bạn không có quyền xem thống kê")
@@ -436,7 +436,7 @@ async def get_new_users_by_month(
             start_year = now.year - 1
 
         start_date = datetime(start_year, start_month, 1)
-        print(f"🔍 Tìm users từ {start_date} với {months} tháng gần đây")
+        # print(f"🔍 Tìm users từ {start_date} với {months} tháng gần đây")
 
         # Pipeline flexible - handle cả string và date object
         pipeline = [
@@ -465,7 +465,7 @@ async def get_new_users_by_month(
         ]
 
         result = await users_collection.aggregate(pipeline).to_list(length=None)
-        print(f"📊 Kết quả aggregation: {len(result)} tháng có data")
+        # print(f"📊 Kết quả aggregation: {len(result)} tháng có data")
 
         # Format dữ liệu
         formatted_data = []
@@ -586,7 +586,7 @@ async def get_logins_by_period(
         ]
 
         result = await users_session_collection.aggregate(pipeline).to_list(length=None)
-        print(f"📊 Kết quả aggregation: {len(result)} records")
+        # print(f"📊 Kết quả aggregation: {len(result)} records")
 
         # Format dữ liệu với tên tháng đúng
         month_names = {
@@ -659,7 +659,7 @@ async def create_dataset_download(
 
         cursor = predictions_collection.find({})
         predictions = await cursor.to_list(length=None)
-        print(f"📊 Tổng số predictions trong database: {len(predictions)}")
+        # print(f"📊 Tổng số predictions trong database: {len(predictions)}")
         if not predictions:
             raise HTTPException(
                 status_code=404, detail="Không có dữ liệu predictions để tạo dataset"
@@ -710,11 +710,11 @@ async def create_dataset_download(
         with tempfile.TemporaryDirectory() as temp_dir:
             images_dir = os.path.join(temp_dir, "images")
             os.makedirs(images_dir, exist_ok=True)
-            print(f"Tạo thư mục images: {images_dir}")
+            # print(f"Tạo thư mục images: {images_dir}")
             all_image_keys = set()
             for pred in predictions:
                 all_image_keys.add(pred["image_key"])
-            print(f"Tổng số image keys unique: {len(all_image_keys)}")
+            # print(f"Tổng số image keys unique: {len(all_image_keys)}")
             if len(all_image_keys) > 0:
                 print(f"Ví dụ image keys: {list(all_image_keys)[:3]}")
             downloaded_count = 0
@@ -784,7 +784,7 @@ async def get_dataset_class_stats(current_user: dict = Depends(get_current_user)
     try:
         from database import predictions_collection
 
-        print("🔍 Bắt đầu lấy thống kê số lượng ảnh theo lớp...")
+        # print("🔍 Bắt đầu lấy thống kê số lượng ảnh theo lớp...")
 
         # Lấy tất cả predictions
         cursor = predictions_collection.find({})
@@ -813,7 +813,7 @@ async def get_dataset_class_stats(current_user: dict = Depends(get_current_user)
         total_images = sum(class_counts.values())
         total_classes = len([count for count in class_counts.values() if count > 0])
 
-        print(f"📊 Thống kê theo lớp:")
+        # print(f"📊 Thống kê theo lớp:")
         for class_name, count in class_counts.items():
             print(f"  - {class_name}: {count} ảnh")
         print(f"📈 Tổng: {total_images} ảnh, {total_classes} lớp có dữ liệu")
